@@ -6,7 +6,17 @@ import logging; logging.basicConfig(level=logging.INFO)
 import asyncio, os, json, time
 from datetime import datetime
 from aiohttp import web
-from orm import Model, IntegerField, StringField
+from orm.Model import Model
+from orm.StringField import *
+from orm.IntegerField import *
+
+'''
+App
+'''
+
+__author__ = 'Johnnywww'
+
+__version__ = '1.0'
 
 class DeviceType(Model):
 	__table__ = 'devicetype'
@@ -27,50 +37,7 @@ def init(loop):
 	logging.info('server started at http://127.0.0.1:%s...' % (port, ))
 	return srv
 
-@asyncio.coroutine
-def create_db_pool(loop, **kw):
-	logging.info("create database connection pool...")
-	global __dbpool
-	__dbpool = yield from aiomysql.create_pool(
-		host = kw.get('host', 'localhost'),
-		port = kw.get('port', 3306),
-		user=kw['user'],
-		password=kw['password'],
-		db=kw['db'],
-		charset=kw.get('charset', 'utf8'),
-		autocommit=kw.get('autocommit', True),
-		maxsize=kw.get('maxsize', 10),
-		minsize=kw.get('minsize', 1),
-		loop=loop
-	)
 
-@asyncio.coroutine
-def select(sql, *args, size=None):
-	logging.info(sql, args)
-	global __dbpool
-	with (yield from __dbpool) as conn:
-		cur = yield from conn.cursor(aiomysql.DictCursor)
-		yield from cur.execute(.replace('?', '%s'), args or () )
-		if size:
-			rs = yield.from cur.fetchmany(size)
-		else:
-			rs = yield.from cur.fetchall()
-		yield from cur.close()
-		logging.info('rows returned: %s' % len(rs))
-		return rs
-
-@aysncio.coroutine
-def execute_ddl(loop, *args):
-	global __dbpool
-	with (yield from __dbpool) as conn:
-		try:
-			cur = yield.from conn.cursor()
-			yield from cur.execute(sql.replace('?', '%s'), args or ())
-			affected = cur.rowcount
-			yield from cur.close()
-		except BaseException as e:
-			raise
-		return affected	
 
 if '__main__' == __name__:
 	loop = asyncio.get_event_loop()

@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+'''
+Field Base Class
+'''
+
+__author__ = 'Johnnywww'
+
+__version__ = '1.0'
+
 class Field(object):
 	def __init__(self, name, column_type, primary_key, default):
 		self._name = name

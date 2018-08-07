@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-from Field import *
+from orm.Field import *
 
 class IntegerField(Field):
 	def __init__(self, name=None, primary_key=False, default=None, ddl='bigint'):

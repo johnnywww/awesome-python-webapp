@@ -2,17 +2,19 @@
 #-*- coding: utf-8 -*-
 
 import time, uuid
-from Model import Model
-from StringField import *
-from BooleanField import *
-from FloatField import *
-from TextField import *
+from orm.Model import Model
+from orm.StringField import *
+from orm.BooleanField import *
+from orm.FloatField import *
+from orm.TextField import *
 
 '''
 App Model 
 '''
 
 __author__ = 'Johnnywww'
+
+__version__ = '1.0'
 
 def next_id():
     return '%015d%s000' % (int(time.time() * 1000), uuid.uuid4().hex)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 import logging; logging.basicConfig(level=logging.INFO)
-from Field import *
+from orm.Field import *
 
 def create_args_string(num):
 	L = []
@@ -27,7 +27,7 @@ class ModelMetaClass(type):
 						raise RuntimeError('Duplicate primary key for field: %s' % k)
 					primaryKey = k
 				else:
-					fields.append(v)
+					fields.append(k)
 		if not primaryKey:
 			raise RuntimeError('Primary key not exist')
 		for k in mappings.keys():
@@ -39,8 +39,8 @@ class ModelMetaClass(type):
 		attrs['__fields__'] = fields
 		attrs['__select__'] = 'select `%s`, %s from `%s`' % (primaryKey, ', '.join(escaped_fields), tablename)
 		attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values(%s)' % (tablename, ', '.join(escaped_fields), primaryKey, create_args_string(len(escaped_fields) + 1))
-		attrs['__update__'] = 'update `%s` set %s where `%s`=?' % (tablename, ', '.join(map(lambda f: '`%s`=?' % (mappings.get(f).name or f), fields)), primaryKey)
+		attrs['__update__'] = 'update `%s` set %s where `%s`=?' % (tablename, ', '.join(map(lambda f: '`%s`=?' % (mappings.get(f).get_name() or f), fields)), primaryKey)
 		attrs['__delete__'] = 'delete from `%s` where `%s`=?' % (tablename, primaryKey)
-		return super(ModelMetaclass, cls).__new__(cls, name, bases, attrs)
+		return super(ModelMetaClass, cls).__new__(cls, name, bases, attrs)
 
 			
